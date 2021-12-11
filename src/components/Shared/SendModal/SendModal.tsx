@@ -65,7 +65,7 @@ const SendModal: FC<SendModalProps> = (props) => {
     setInvoice(event.target.value);
   };
 
-  const lnBalance =
+  const lnBalanceDecorated =
     appCtx.unit === "BTC"
       ? convertToString(appCtx.unit, convertMSatToBtc(props.lnBalance))
       : convertToString(appCtx.unit, convertMSatToSat(props.lnBalance));
@@ -75,13 +75,14 @@ const SendModal: FC<SendModalProps> = (props) => {
     return (
       <ModalDialog close={() => props.onClose(false)}>
         <ConfirmSendModal
-          ln={lnTransaction}
-          back={() => setConfirm(false)}
-          amount={amount.toString()}
           address={addr}
-          fee={fee}
-          comment={comment}
+          invoiceAmount={amount}
+          back={() => setConfirm(false)}
+          balance={props.lnBalance}
           close={props.onClose}
+          comment={comment}
+          fee={fee}
+          ln={lnTransaction}
         />
       </ModalDialog>
     );
@@ -97,21 +98,21 @@ const SendModal: FC<SendModalProps> = (props) => {
         <SendLn
           onChangeInvoice={changeInvoiceHandler}
           onConfirm={confirmLnHandler}
-          balance={lnBalance}
+          balanceDecorated={lnBalanceDecorated}
         />
       )}
 
       {!lnTransaction && (
         <SendOnChain
-          balance={props.onchainBalance}
           address={address}
-          onChangeAddress={changeAddressHandler}
           amount={amount}
-          onChangeAmount={changeAmountHandler}
-          fee={fee}
-          onChangeFee={changeFeeHandler}
+          balance={props.onchainBalance}
           comment={comment}
+          fee={fee}
+          onChangeAddress={changeAddressHandler}
+          onChangeAmount={changeAmountHandler}
           onChangeComment={changeCommentHandler}
+          onChangeFee={changeFeeHandler}
           onConfirm={confirmOnChainHandler}
         />
       )}
